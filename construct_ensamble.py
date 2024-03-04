@@ -2,6 +2,21 @@ from visualize import visualize_population, visualize_ensemble, visualize_pareto
 from utils import get_solutoins, load_solutions, save_ensemble, get_reference_solution, compute_distance, get_optimal_solution
 
 def construct_ensamble(solutions, k):
+    """
+    An iterative algorithm to construct an ensemble of k solutions from the given solutions.
+    Uses the reference solution, which is the best performing solution, as the starting point.
+    The algorithm iteratively adds the next best solution based on two objectives:
+        1. The largest minimum distance between candidate solutions and the solutions in the ensemble
+        2. The fitness of the candidate solution
+    The optimal solutions are selected from the pareto front of the candidate solutions
+    Input:
+        solutions: dictionary of solutions
+            key: path to solution
+            value: tuple of (weight_matrix, fitness)
+        k: number of solutions to include in the ensemble
+    Output:
+        List of k solutions to include in the ensemble
+    """
     ref_key, ref_solution = get_reference_solution(solutions) # The reference solution is the best performing solution
     included = {ref_key:True} # Hash table to keep track of already included solutions
     new_set = [ref_key] # The new set of solutions
@@ -45,7 +60,7 @@ def generate_ensemble(root_dir, dst, generation_st, generation_end, k):
     ensemble = construct_ensamble(solutions, k)
     visualize_population(solutions)
     visualize_ensemble(solutions, ensemble)
-    #save_ensemble(ensemble, dst)
+    save_ensemble(ensemble, dst)
 
 
 # Testing
