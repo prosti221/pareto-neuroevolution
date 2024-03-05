@@ -30,9 +30,10 @@ def visualize_population(solutions):
     embedding = mds.fit_transform(distance_map)
     # Get color based on the fitness
     fitness = [solutions[key][1] for key in solutions.keys()]
+    v_min = min(fitness); v_max = max(fitness)
 
     # Plot the MDS embedding
-    plt.scatter(embedding[:, 0], embedding[:, 1], c=fitness)
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=fitness, vmin=v_min, vmax=v_max, cmap="viridis")
     plt.xlabel("mds 1")
     plt.ylabel("mds 2")
     plt.title("Parameter space embedding of all solutions")
@@ -46,16 +47,18 @@ def visualize_ensemble(solutions, ensemble_set):
         for j, key2 in enumerate(ensemble_set):
             distance_map[i][j] = compute_distance(solutions[key1][0], solutions[key2][0])
 
-    plt.imshow(distance_map, cmap="hot", interpolation="nearest")
-    plt.show()
+    #plt.imshow(distance_map, cmap="hot", interpolation="nearest")
+    #plt.show()
 
     mds = MDS(n_components=2, dissimilarity="precomputed")
     embedding = mds.fit_transform(distance_map)
 
     fitness = [solutions[key][1] for key in ensemble_set]
+    all_fitness = [solutions[key][1] for key in solutions.keys()]
+    v_min, v_max = min(all_fitness), max(all_fitness)
 
     # Plot the MDS embedding
-    plt.scatter(embedding[:, 0], embedding[:, 1], c=fitness)
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=fitness, vmin=v_min, vmax=v_max, cmap="viridis")
     plt.xlabel("mds 1")
     plt.ylabel("mds 2")
     plt.title("Parameter space embedding of ensemble solutions")

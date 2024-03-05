@@ -69,7 +69,8 @@ def load_solutions(solution_paths):
     Output:
         Dictionary of solutions with the index as the key and the solution weight matrix as the value
     """
-    fitness_scalar = lambda x: ((x + 1) / 2) * 100
+    #fitness_scalar = lambda x: ((x + 1) / 2) * 100
+    fitness_scalar = lambda x: x
     solutions = {}
     for solution_path in solution_paths:
         layer = torch.load(solution_path, map_location=torch.device('cpu'))
@@ -103,7 +104,7 @@ def compute_distance(mat1, mat2, metric="L1"):
         return ((mat1 - mat2)**2).mean().item()
     elif metric == "dot-product":
         d = np.dot(mat1.flatten(), mat2.flatten())
-        #d /= (np.linalg.norm(mat1) * np.linalg.norm(mat2))
+        d /= (np.linalg.norm(mat1) * np.linalg.norm(mat2))
         return d
     else:
         raise ValueError("Invalid metric")

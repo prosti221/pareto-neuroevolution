@@ -67,8 +67,8 @@ def generate_ensemble(root_dir, dst, generation_st, generation_end, k):
 if __name__ == "__main__":
     src_path = "./test_populations/"
     dst_path = "./test_ensemble/"
-    generation_st = 20
+    generation_st = 0
     generation_end = 25
-    k = 20
+    k = 10
 
     generate_ensemble(src_path, dst_path, generation_st, generation_end, k)
