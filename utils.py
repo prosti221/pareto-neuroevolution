@@ -5,6 +5,7 @@ from tqdm import tqdm
 import torch
 import numpy as np
 from pareto import compute_pareto
+from cka import linear_CKA, kernel_CKA
 
 def get_solutoins(root_dir, generation_st, generation_end):
     """
@@ -19,10 +20,9 @@ def get_solutoins(root_dir, generation_st, generation_end):
     """
     if not os.path.exists(root_dir):
         raise ValueError("The root directory does not exist")
-
     solution_paths = []
     subfolders = os.listdir(root_dir)
-    #subfolders.sort(key=lambda x: int(re.findall(r"\d+", x)[0]))
+    subfolders.sort(key=lambda x: int(re.findall(r"\d+", x)[0]))
     for i, subfolder in enumerate(tqdm(subfolders, desc="fetching genomes from populations")):
         if i >= generation_st and i <= generation_end:
             print(f"Fetching genomes from {subfolder}")
@@ -94,7 +94,7 @@ def get_reference_solution(solutions):
 
     return (key, solutions[key])
 
-def compute_distance(mat1, mat2, metric="L1"):
+def compute_distance(mat1, mat2, metric="Kernel CKA"):
     """
     Compute the mean squared error between two matrices
     """
@@ -106,6 +106,11 @@ def compute_distance(mat1, mat2, metric="L1"):
         d = np.dot(mat1.flatten(), mat2.flatten())
         d /= (np.linalg.norm(mat1) * np.linalg.norm(mat2))
         return d
+    elif metric == "Linear CKA":
+        # https://arxiv.org/pdf/1905.00414.pdf
+        return linear_CKA(mat1, mat2)
+    elif metric == "Kernel CKA":
+        return kernel_CKA(mat1, mat2)
     else:
         raise ValueError("Invalid metric")
 
